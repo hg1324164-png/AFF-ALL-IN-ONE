@@ -955,6 +955,33 @@ class FF1v4Modal(
 
 
 # ============================================================
+# 4V4 WAR MODAL
+# ============================================================
+
+class FF4v4Modal(discord.ui.Modal, title="⚔️ 4v4 War Request"):
+
+    ff_uid = discord.ui.TextInput(label="Your Free Fire UID", placeholder="Enter your FF UID", required=True, max_length=30)
+    team_name = discord.ui.TextInput(label="Team / Squad Name", placeholder="Enter your 4v4 team name", required=True, max_length=100)
+    team_players = discord.ui.TextInput(label="Team Players", placeholder="Enter all 4 player names or UIDs", style=discord.TextStyle.paragraph, required=True, max_length=300)
+    mode = discord.ui.TextInput(label="4v4 War Mode", placeholder="Example: CS / BR / Custom", required=True, max_length=100)
+    war_details = discord.ui.TextInput(label="War Details", placeholder="Opponent, rules, preferred time, etc.", style=discord.TextStyle.paragraph, required=True, max_length=700)
+
+    async def on_submit(self, interaction: discord.Interaction):
+        fields = [
+            ("🆔 YOUR FF UID", f"`{self.ff_uid.value}`"),
+            ("🛡️ TEAM / SQUAD", self.team_name.value),
+            ("👥 TEAM PLAYERS", self.team_players.value),
+            ("🎮 WAR MODE", self.mode.value),
+            ("⚔️ WAR DETAILS", self.war_details.value)
+        ]
+        await create_ticket_channel(
+            interaction, "4v4 War", "⚔️ FREE FIRE 4v4 WAR",
+            "Welcome to the **AFF-ARMY 4v4 War**.\n\nYour 4v4 war request has been submitted to the staff team.\n\n🛡️ Staff will coordinate the war details and confirm the match.",
+            fields
+        )
+
+
+# ============================================================
 # 1V1 MODAL
 # ============================================================
 
@@ -1214,6 +1241,13 @@ class TicketDropdown(
             ),
 
             discord.SelectOption(
+                label="4v4 War",
+                description="Request a Free Fire 4v4 war",
+                emoji="⚔️",
+                value="4v4"
+            ),
+
+            discord.SelectOption(
                 label="Tournament",
                 description="Tournament / esports support",
                 emoji="🏆",
@@ -1283,6 +1317,16 @@ class TicketDropdown(
 
             await interaction.response.send_modal(
                 FF1v4Modal()
+            )
+
+        # ----------------------------------------------------
+        # 4V4 WAR
+        # ----------------------------------------------------
+
+        elif value == "4v4":
+
+            await interaction.response.send_modal(
+                FF4v4Modal()
             )
 
         # ----------------------------------------------------
@@ -1702,6 +1746,9 @@ class Ticket(
 
                 "🔥 **1v4 CHALLENGE**\n"
                 "Request a 1v4 challenge.\n\n"
+
+                "⚔️ **4v4 WAR**\n"
+                "Request a Free Fire 4v4 war.\n\n"
 
                 "🏆 **TOURNAMENT**\n"
                 "Tournament and esports support.\n\n"
